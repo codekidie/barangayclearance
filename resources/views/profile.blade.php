@@ -92,7 +92,7 @@
                 <button type="submit" class="btn btn-primary">Update profile</button>
               </div>
            {!! Form::close() !!}
-      </div>
+       </div>
       <!-- /.box -->
      </div>
     

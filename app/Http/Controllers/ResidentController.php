@@ -1,10 +1,17 @@
 <?php
-
 namespace App\Http\Controllers;
-use Auth;
+
 use Illuminate\Http\Request;
+use App\Http\Requests\UploadRequest;
+use App\Http\Requests\EditResidentProfileRequest;
+
 use App\User;
 use DB;
+use HTML;
+use Session;
+use Auth;
+use Storage;
+
 
 
 class ResidentController extends Controller
@@ -16,7 +23,18 @@ class ResidentController extends Controller
 
     public function businesspermit()
     {
-        return view('resident.businesspermit');
+         
+         $data['cl'] = DB::table('businesspermit')
+         ->where('user_id', '=', Auth::user()->id)
+         ->orderBy('id', 'desc')    
+         ->get();
+
+         $data['pl'] = DB::table('users')
+         ->where('role', '=', 'Purok leader')
+         ->orderBy('id', 'desc')    
+         ->get();
+
+        return view('resident.businesspermit',$data);
     	
     }
 
@@ -26,11 +44,42 @@ class ResidentController extends Controller
     	
     }
 
-    public function clearance()
+    public function clearance($id)
     {
-        return view('resident.clearance');
+
+         $data['cl'] = DB::table('clearance')
+         ->where('user_id', '=', $id)
+         ->orderBy('id', 'desc')    
+         ->get();
+
+         $data['pl'] = DB::table('users')
+         ->where('role', '=', 'Purok leader')
+         ->orderBy('id', 'desc')    
+         ->get(); 
+         
+         return view('resident.clearances',$data);
     	
     }
+
+    public function getallusers()
+    {
+         $data = DB::table('users')
+         ->orderBy('firstname', 'asc')    
+         ->get();
+         return  $data;
+    }
+
+    public function getdata($data)
+    {
+        $data = DB::table('users')
+         ->where('firstname', 'like', $data.'%')
+         ->orWhere('lastname','like', $data.'%')
+         ->orWhere('middlename','like', $data.'%')
+         ->orderBy('firstname', 'asc')    
+         ->get();
+         return  $data;
+    }
+
 
     public function details()
     {
@@ -76,6 +125,12 @@ class ResidentController extends Controller
         
     }
 
+    public function settings()
+    {
+        return view('resident.settings');
+        
+    }
+
     public function update_userLatLong($lat,$long,$id)
     {
         $user = User::find($id);
@@ -92,6 +147,99 @@ class ResidentController extends Controller
         ->get();
         return $users;
 
+    }
+
+     public function editprofile(EditResidentProfileRequest $request)
+    {   
+
+
+          if ($request->photos) {
+
+                  foreach ($request->photos as $photo) {
+                        
+                        $user =  User::find($request->id);
+                        $user->firstname  = $request->firstname;
+                        $user->middlename = $request->middlename;
+                        $user->lastname   = $request->lastname;
+                        $user->email      = $request->email;
+
+                        Storage::delete($user->profilepic);
+                        
+                        $user->profilepic = $photo->store('photos');
+                        $user->username   = $request->username;
+
+                        $usernameexist = DB::table('users')
+                        ->where('id', '!=', Auth::user()->id)
+                        ->Where('username',  $request->username)
+                        ->get();
+
+                        $emailexist = DB::table('users')
+                        ->where('id', '!=', Auth::user()->id)
+                        ->Where('email',  $request->email)
+                        ->get();
+
+                        if (count($usernameexist) > 0) {
+                           Session::flash('error_msg', 'username already exist');
+                           
+                        }else if (count($emailexist) > 0) {
+                          
+                           Session::flash('error_msg', 'email already exist');
+
+                        }else{
+                            
+                            if (!empty($request->password)) {
+                               $user->password   = bcrypt($request->password);
+                            }
+                       
+                            
+                            if ($user->save()) {
+                                   Session::flash('msg', 'Profile successfully updated');
+                            } 
+                        }
+
+
+                      
+                  }
+          }else{
+                        $user =  User::find($request->id);
+                        $user->firstname  = $request->firstname;
+                        $user->middlename = $request->middlename;
+                        $user->lastname   = $request->lastname;
+                        $user->email      = $request->email;
+                        $user->username   = $request->username;
+                      
+                        $usernameexist = DB::table('users')
+                        ->where('id', '!=', Auth::user()->id)
+                        ->Where('username',  $request->username)
+                        ->get();
+
+                        $emailexist = DB::table('users')
+                        ->where('id', '!=', Auth::user()->id)
+                        ->Where('email',  $request->email)
+                        ->get();
+
+                        if (count($usernameexist) > 0) {
+                           Session::flash('error_msg', 'Username alreade exist');
+                           
+                        }else if (count($emailexist) > 0) {
+                          
+                           Session::flash('error_msg', 'email already exist');
+
+                        }else{
+                            
+                            if (!empty($request->password)) {
+                               $user->password   = bcrypt($request->password);
+                            }
+                           
+
+                            if ($user->save()) {
+                                   Session::flash('msg', 'Profile successfully updated');
+                            } 
+                        }
+            }
+
+        return redirect('resident/settings');
+        
     }
 
     

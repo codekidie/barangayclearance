@@ -11,6 +11,13 @@ use DB;
 use HTML;
 use Session;
 use Auth;
+use Storage;
+
+use App\Certification;
+use App\Clearance;
+use App\Socialpension;
+use App\Businesspermit;
+
 
 class AdminController extends Controller
 {
@@ -27,11 +34,6 @@ class AdminController extends Controller
     public function profile($username)
     { 
         return view('profile');
-    }
-    
-   public function blotter()
-    {
-      return view('blotter');
     }
 
 
@@ -82,17 +84,9 @@ class AdminController extends Controller
         return view('credentials',$data);
     }
 
-    public function purokLeaderLocation()
-    {
-        $data['pl'] = DB::table('users')
-            ->where('role', '=', 'Purok leader')
-            ->orderBy('id', 'desc')
-            ->get();
-         return view('purokleaderlocation',$data);
-             
-    }
 
-     public function announcement()
+
+    public function announcement()
     {
         return view('announcement');
     }
@@ -106,6 +100,115 @@ class AdminController extends Controller
      public function setappointment()
     {
         return view('setappointment');
+    }
+
+    public function approval()
+    {   
+
+        $data['clearance'] =  Clearance::all();
+        $data['certification'] =  Certification::all();
+        $data['socialpension'] =  Socialpension::all();
+        $data['businesspermit'] =  Businesspermit::all();
+
+        return view('approval',$data);
+    }
+
+    public function clearanceapproval($id,$status)
+    {
+       
+
+        if ($status == 'approved') {
+            $c = Clearance::find($id);
+            $c->status = 'approved';
+            $c->save();
+             Session::flash('msg', 'Clearance approved');
+        }else{
+            $c = Clearance::find($id);
+            $c->status = 'reject';
+            $c->save();
+             Session::flash('msg', 'Clearance rejected');
+        }
+
+         $data['clearance'] =  Clearance::all();
+        $data['certification'] =  Certification::all();
+        $data['socialpension'] =  Socialpension::all();
+        $data['businesspermit'] =  Businesspermit::all();
+
+        return view('approval',$data);
+
+    }
+
+    public function businesspermitapproval($id,$status)
+    {
+         if ($status == 'approved') {
+            $c = Businesspermit::find($id);
+            $c->approval_status = 'approved';
+            $c->save();
+             Session::flash('msg', 'Business permit approved');
+        }else{
+            $c = Businesspermit::find($id);
+            $c->approval_status = 'reject';
+            $c->save();
+             Session::flash('msg', 'Business permit rejected');
+        }
+
+        $data['clearance'] =  Clearance::all();
+        $data['certification'] =  Certification::all();
+        $data['socialpension'] =  Socialpension::all();
+        $data['businesspermit'] =  Businesspermit::all();
+
+        return view('approval',$data);
+    }
+
+    public function certificationapproval($id,$status)
+    {
+         if ($status == 'approved') {
+            $c = Certification::find($id);
+            $c->status = 'approved';
+            $c->save();
+             Session::flash('msg', 'Certification  approved');
+        }else{
+            $c = Certification::find($id);
+            $c->status = 'reject';
+            $c->save();
+             Session::flash('msg', 'Certification  rejected');
+        }
+
+        $data['clearance'] =  Clearance::all();
+        $data['certification'] =  Certification::all();
+        $data['socialpension'] =  Socialpension::all();
+        $data['businesspermit'] =  Businesspermit::all();
+
+        return view('approval',$data);
+    }
+
+    public function socialpensionapproval($id,$status)
+    {
+         if ($status == 'approved') {
+            $c = Socialpension::find($id);
+            $c->approval_status = 'approved';
+            $c->save();
+             Session::flash('msg', 'Socialpension  approved');
+        }else{
+            $c = Socialpension::find($id);
+            $c->approval_status = 'reject';
+            $c->save();
+             Session::flash('msg', 'Socialpension  rejected');
+        }
+
+        $data['clearance'] =  Clearance::all();
+        $data['certification'] =  Certification::all();
+        $data['socialpension'] =  Socialpension::all();
+        $data['businesspermit'] =  Businesspermit::all();
+
+        return view('approval',$data);
+    }
+
+    
+
+    public function notifications()
+    {
+        return view('notifications');
     }
 
     public function uploadSubmit(UploadRequest $request)
@@ -127,7 +230,6 @@ class AdminController extends Controller
                               'password' => bcrypt($request->password),
                           ]);
                        if ($user) {
-                           $filename = $photo->store('photos');
                            Session::flash('msg', 'Credential successfully added to the database');
                         } 
                   }
@@ -160,6 +262,9 @@ class AdminController extends Controller
                     $user->middlename = $request->middlename;
                     $user->lastname   = $request->lastname;
                     $user->email      = $request->email;
+                    
+                    Storage::delete($user->profilepic);
+
                     $user->profilepic = $photo->store('photos');
                     $user->username   = $request->username;
 
@@ -169,7 +274,6 @@ class AdminController extends Controller
                
 
                    if ($user->save()) {
-                       $filename = $photo->store('photos');
                        Session::flash('msg', 'Profile successfully updated');
                     } 
               }

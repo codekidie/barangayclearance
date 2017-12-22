@@ -15,15 +15,14 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('blotter', require('./components/Blotter.vue'));
-Vue.component('socialPension', require('./components/SocialPension.vue'));
-Vue.component('prerequisite', require('./components/Prerequisite.vue'));
-Vue.component('schedule', require('./components/Schedule.vue'));
-Vue.component('messages', require('./components/Messages.vue'));
-Vue.component('location', require('./components/Location.vue'));
-Vue.component('details', require('./components/Details.vue'));
-Vue.component('certificate', require('./components/Certificate.vue'));
+Vue.component('socialpension-dataviewer', require('./components/SocialPensionDataViewer.vue'));
+Vue.component('businesspermit-dataviewer', require('./components/BusinessPermitDataViewer.vue'));
+Vue.component('certification-dataviewer', require('./components/CertificationDataViewer.vue'));
+Vue.component('schedule-dataviewer', require('./components/ScheduleDataViewer.vue'));
+Vue.component('message-room', require('./components/MessageSender.vue'));
+
 
 const app = new Vue({
     el: '#app'
 });
+

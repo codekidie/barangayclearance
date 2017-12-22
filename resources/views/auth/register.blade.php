@@ -3,7 +3,8 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+      <img src="resources/assets/img/logo.png" style="width:100px;display: block;margin:50px auto;">
+        <div class="col-md-8 col-md-offset-2"  style="margin-top:10px;">
             <div class="panel panel-default">
                 <div class="panel-heading">Register</div>
                 <div class="panel-body">

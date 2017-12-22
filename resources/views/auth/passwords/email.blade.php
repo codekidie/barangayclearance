@@ -3,6 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row">
+        <img src="<?php echo asset("resources/assets/img/logo.png");?>" alt="User Image" style="width:100px;display: block;margin:50px auto;">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">Reset Password</div>

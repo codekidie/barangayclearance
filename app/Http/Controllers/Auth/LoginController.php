@@ -25,7 +25,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectToResident = '/home';
+    protected $redirectToResident = '/resident/schedule';
     protected $redirectToAdmin = '/admin/credentials';
 
     /**

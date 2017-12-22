@@ -1,13 +1,11 @@
-  var base_url = 'http://' + window.location.hostname + '/clearance/api/';
   $('.purokTable').dataTable();
-    
-  function viewLocation(latlong)
-  {
 
+  function viewLocation(lat,long)
+  {
       var gm = google.maps;
       var map = new gm.Map(document.getElementById('map'), {
         mapTypeId: 'satellite',
-        center: new gm.LatLng(latlong), 
+        center: new gm.LatLng(lat,long), 
         zoom: 25,  // whatevs: fitBounds will override
         scrollwheel: false
       });
@@ -73,8 +71,7 @@
       
       var global_arr = [];
 
-      $.getJSON("http://localhost/clearance/api/admin/users", function(restdata) {
-        console.log(restdata);
+      $.getJSON(base_url_api+"admin/users", function(restdata) {
            $.each(restdata, function(key, value) {
             global_arr.push({id: value.id,
                              profile_picture : value.profilepic,
@@ -87,7 +84,51 @@
 
   function editPurokleader(id)
   {
-    $('#editPurokLeaderModal').modal('toggle');
+      $('#editPurokLeaderModal').modal('toggle');
+      $.getJSON(base_url_api+"admin/staff/purokleader/edit/"+id, function(restdata) {
+            console.log(restdata);
+                $('#edit_firstname').val(restdata.firstname)
+                $('#edit_middlename').val(restdata.middlename)
+                $('#edit_lastname').val(restdata.lastname)
+                $('#edit_username').val(restdata.username)
+                $('#edit_email').val(restdata.email)
+                $('#edit_latitude').val(restdata.latitude)
+                $('#edit_longitude').val(restdata.longitude)
+                $('#edit_purok_id').val(restdata.id)
+
+                       $('#editPurokleader').submit(function(e){
+                          $.ajax({
+                                   type: "POST",
+                                   url: base_url_api+'admin/staff/purokleader/edit_save',
+                                   data: $("#editPurokleader").serialize(), // serializes the form's elements.
+                                   success: function(data)
+                                   {
+                                        $.toaster({ settings :{'timeout' : 9500}});
+
+                                        if(data == 1)
+                                        {
+                                            // Success
+                                            $.toaster('Purok leader updated success!','Success', 'success');
+                                            location.reload();
+                                            
+                                        }
+                                        else if(data == 0)
+                                        {
+                                            // Error
+                                            $.toaster('Something went wrong please try again','Error :', 'danger');
+                                        }
+
+                                        else
+                                        {
+                                            // Error
+                                            $.toaster(data,'Error', 'warning');
+                                        }
+                                   }
+                             });
+                            e.preventDefault();
+                            $('#editPurokLeaderModal').modal('close');
+                     }) 
+      });
   }
 
   function deletPurokLeader(id)
@@ -95,12 +136,11 @@
          var r = confirm("Are you sure you want to delete this!");
         if (r == true) {
               $.ajax({
-              url: base_url+"admin/purokleader/delete/"+id,
+              url: base_url_api+"admin/purokleader/delete/"+id,
              }).done(function(data) {
                 if (data == 1) {
                   $.toaster('purok leader delete success!','Success', 'success');
-
-                  viewNoticeBlotter(id);
+                  location.reload();
                 }else{
                     $.toaster('Something went wrong please try again','Error :', 'danger');
                 }
@@ -115,7 +155,7 @@
         $('#addPurokleader').submit(function(e){
             $.ajax({
                      type: "POST",
-                     url: base_url+'admin/purokleader/save',
+                     url: base_url_api+'admin/purokleader/save',
                      data: $("#addPurokleader").serialize(), // serializes the form's elements.
                      success: function(data)
                      {
@@ -125,6 +165,8 @@
                           {
                               // Success
                               $.toaster('Purok leader saved success!','Success', 'success');
+                              location.reload();
+                              
                           }
                           else if(data == 0)
                           {
@@ -140,6 +182,7 @@
                      }
                });
               e.preventDefault();
+              $('#addPurokLeaderModal').modal('close');
        }) 
 
   }

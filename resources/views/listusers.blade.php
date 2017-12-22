@@ -27,11 +27,11 @@
                 <?php if (Auth::user()->role == 'Staff'): ?>
                         Listing Purok Leaders
                 <?php else: ?>
-                
+                        
                 <?php endif ?>  
             </div>
             <div class="box-body">
-                 <table class="table table-hover" id="DataTable">
+                 <table class="table table-hover dt1" id="DataTable">
                     <thead>
                       <th>First Name</th> <th>Middle Name</th><th> Last Name</th> <th> Email </th> <th> Username </th>
                     </thead>

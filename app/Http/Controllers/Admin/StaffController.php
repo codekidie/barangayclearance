@@ -15,33 +15,16 @@ use Auth;
 
 class StaffController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
+
 
     public function listusers()
     {
-    	  if (Auth::user()->role == 'Staff') {
 		       	$data['listusers'] = DB::table('users')
-            ->where('role', '=', 'Purok leader')
+            ->where('role', '=', 'Resident')
             ->orderBy('id', 'desc')
             ->get();
              return view('listusers',$data);
 
-		  }	
-
-          else if (Auth::user()->role == 'Barangay Captain') {
-                        $data['listusers'] = DB::table('users')
-                        ->where('role', '=', 'Barangay Captain')
-                        ->orWhere('role', '=', 'Admin')
-                        ->orderBy('id', 'desc')
-                        ->get();
-             return view('listusers',$data);
-
-          } 
-
-		  
     }
 
     public function sendBlotterNotice(Request $request)
@@ -71,7 +54,7 @@ class StaffController extends Controller
 
       $content = '';    
       foreach ($notice as $n) {
-        $content .= '<div class="alert alert-info">'.$n->notice.' <a href="#" class="btn btn-danger btn-sm pull-right" onclick="deleteNotice('.$n->id.')">Delete</a>  <a href="#" class="btn btn-info btn-sm pull-right"  onclick="editNotice('.$n->id.')">Edit</a> </div>';   
+        $content .= '<div class="alert alert-info">'.$n->notice.' <a href="#" class="btn btn-danger btn-sm pull-right" onclick="deleteNotice('.$n->id.')" style="margin-left:5px;">Delete</a>  <a href="#" class="btn btn-primary btn-sm pull-right"  onclick="editNotice('.$n->id.')"> Edit</a> </div>';   
       }     
 
       return $content;
@@ -175,6 +158,73 @@ class StaffController extends Controller
               $content.='</tbody></table>';
               return $content;
     }
+
+    public function purokLeaderLocation()
+    {
+        $data['pl'] = DB::table('users')
+            ->where('role', '=', 'Purok leader')
+            ->orderBy('id', 'desc')
+            ->get();
+         return view('staff.purokleaderlocation',$data);
+             
+    }
+
+
+    public function blotter()
+    {
+      return view('staff.blotter');
+    }
+
+
+    public function request()
+    {
+
+      return view('staff.request');
+
+    }
+
+    public function registeredresidents()
+    {
+
+      return view('staff.registeredresidents');
+
+    }
+
+    public function privileges()
+    {
+
+      return view('staff.privileges');
+
+    }
+
+    public function edit_purokleader($id)
+    {
+        $pl = User::find($id);
+        if (!empty($pl)) {
+           return $pl;
+        }
+    }
+
+    public function edit_save_purokleader(Request $request)
+    {
+        $pl =  User::find($request->edit_purok_id);
+        $pl->firstname = $request->firstname;
+        $pl->middlename = $request->middlename;
+        $pl->lastname = $request->lastname;
+        $pl->email = $request->email;
+        $pl->latitude = $request->latitude;
+        $pl->longitude = $request->longitude;
+        if (!empty($request->password)) {
+            $pl->password = $request->password;
+        }
+
+        if ($pl->save()) {
+            return 1;
+        }else{
+          return 0;
+        }
+    } 
+    
 
 
 }

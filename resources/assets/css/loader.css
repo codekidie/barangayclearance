@@ -1,3 +1,6 @@
+.clear-fix{
+  clear: both !important;
+}
 .loader-wrapper{
   background: none repeat scroll 0 0 black;
   position: fixed;

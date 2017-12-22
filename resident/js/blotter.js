@@ -1,11 +1,10 @@
-  var base_url = 'http://' + window.location.hostname + '/clearance/api/';
  
- $('select').select2();
+ // $('select').select2();
  $('.timepicker').timepicker();
  getBlotter();
 
     $.ajax({
-      url: base_url+"resident/fullname",
+      url: base_url_api+"resident/fullname",
      }).done(function(data) {
         $('.selectsearch').html(data);
     });
@@ -16,13 +15,13 @@
 
         
         $.ajax({
-          url: base_url+"resident/blotter/notice/"+id,
+          url: base_url_api+"resident/blotter/notice/"+id,
          }).done(function(data) {
             $('.viewnotice-blotterwrapper').html(data);
         });
 
        $.ajax({
-          url: base_url+"resident/blotter/notice/isviewed/"+id,
+          url: base_url_api+"resident/blotter/notice/isviewed/"+id,
          }).done(function(data) {
             getBlotter();
             getBlotterNoticeCount();
@@ -44,7 +43,7 @@
         $('#blotterReport').submit(function(e){
             $.ajax({
                      type: "POST",
-                     url: base_url+'resident/blotter/save',
+                     url: base_url_api+'resident/blotter/save',
                      data: $("#blotterReport").serialize(), // serializes the form's elements.
                      success: function(data)
                      {
@@ -82,7 +81,7 @@
          let user_id = $('#userid').val();
 
          $.ajax({
-          url: base_url+"resident/blotter/"+user_id,
+          url: base_url_api+"resident/blotter/"+user_id,
          }).done(function(data) {
             $('#blotter-wrapper').html(data);
             $('.blotterTable').dataTable();
@@ -94,7 +93,7 @@
         $('#blotterModal').modal('toggle');
 
          $.ajax({
-          url: base_url+"resident/blotter/edit/"+id,
+          url: base_url_api+"resident/blotter/edit/"+id,
          }).done(function(data) {
             $('.contact').val(data.person_contact);
             $('.witness_contact').val(data.witness_contact);
@@ -107,7 +106,7 @@
              $('#blotterReport').submit(function(e){
               $.ajax({
                            type: "POST",
-                           url: base_url+'resident/blotter/save_edit',
+                           url: base_url_api+'resident/blotter/save_edit',
                            data: $("#blotterReport").serialize(), // serializes the form's elements.
                            success: function(data2)
                            {
@@ -143,7 +142,7 @@
         var r = confirm("Are you sure you want to delete this!");
         if (r == true) {
             $.ajax({
-              url: base_url+"resident/blotter/delete/"+id,
+              url: base_url_api+"resident/blotter/delete/"+id,
              }).done(function(data) {
                 if (data == 1) {  $.toaster('Blotter data deleted success!','Success', 'success'); }
                 else if(data == 0){ $.toaster('Something went wrong blotter data not deleted!','Error', 'danger');  }  
@@ -158,7 +157,7 @@
      {
         let user_id = $('#userid').val();
         $.ajax({
-          url: base_url+"resident/blotternoticecount/"+user_id,
+          url: base_url_api+"resident/blotternoticecount/"+user_id,
          }).done(function(data) {
             $('#blotternotice-count').text(data);
         });

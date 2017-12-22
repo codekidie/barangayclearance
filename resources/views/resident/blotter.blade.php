@@ -114,7 +114,7 @@
 						</div>
 
 
-							<!-- Modal Blotter notice -->
+						<!-- Modal Blotter notice -->
 						<div id="blotterNoticeModal" class="modal fade" role="dialog">
 						  <div class="modal-dialog">
 

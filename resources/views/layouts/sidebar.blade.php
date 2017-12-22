@@ -32,11 +32,6 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
-        <li class="">
-          <a href="#">
-            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-          </a>
-        </li>
         
         <?php if (Auth::user()->role == 'Barangay Captain'): ?>
           
@@ -87,7 +82,7 @@
             </a>
           </li>
            <li>
-            <a href="{{url('/admin/notifications')}}">
+            <a href="{{url('/admin/approval')}}">
               <i class="fa fa-th"></i> <span>Approval</span>
             </a>
           </li>
@@ -99,35 +94,45 @@
 
           <?php elseif (Auth::user()->role == 'Staff'): ?>
            <li>
-            <a href="{{url('/admin/blotter')}}">
+            <a href="{{url('/admin/staff/blotter')}}">
               <i class="fa fa-th"></i> <span>Blotter</span>
             </a>
           </li>
            <li>
-            <a href="{{url('/admin/notifications')}}">
+            <a href="{{url('/admin/staff/request')}}">
               <i class="fa fa-th"></i> <span>Request</span>
             </a>
           </li>
            <li>
-            <a href="{{url('/admin/purokleaderlocation')}}">
+            <a href="{{url('/admin/staff/purokleaderlocation')}}">
               <i class="fa fa-th"></i> <span>Purok Leaders</span>
             </a>
           </li>
            <li>
-            <a href="{{url('/admin/notifications')}}">
+            <a href="{{url('/admin/staff/registeredresidents')}}">
               <i class="fa fa-th"></i> <span>Registered Residents</span>
             </a>
           </li>
            <li>
-            <a href="{{url('/admin/notifications')}}">
+            <a href="{{url('/admin/staff/privileges')}}">
               <i class="fa fa-th"></i> <span>Privileges</span>
             </a>
           </li>
 
         <?php elseif (Auth::user()->role == 'Clerk'): ?>
            <li>
-            <a href="{{url('/admin/credentials')}}">
+            <a href="{{url('/admin/clerk/request')}}">
               <i class="fa fa-th"></i> <span>Requests</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{url('/admin/clerk/messages')}}">
+              <i class="fa fa-envelope"></i> <span>Messages</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{url('/admin/clerk/history')}}">
+              <i class="fa fa-history"></i> <span>Transaction History</span>
             </a>
           </li>
         <?php endif ?>

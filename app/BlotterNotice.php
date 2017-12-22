@@ -8,7 +8,7 @@ class BlotterNotice extends Model
 {
     protected $table = 'blotter_notice';
 	   
-   protected $fillable = [
+    protected $fillable = [
          'blotter_id', 'notice','is_viewed',
     ];
 }

@@ -6,5 +6,10 @@
                     <h1 class="page-header">Business Permit</h1>
                 </div>
                 <!-- /.col-lg-12 -->
-            </div>
+        </div>
+        <div id="app">
+            <businesspermit-dataviewer source="/clearance/api/resident/businesspermit/viewdata"></businesspermit-dataviewer>     
+        </div>   
+
 @endsection
+	

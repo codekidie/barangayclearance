@@ -1,12 +1,12 @@
-  var base_url = 'http://' + window.location.hostname + '/clearance/api/';
  
   getAllBlotter();
+ $('.dt').dataTable();
 
 
   function getAllBlotter()
   {
         $.ajax({
-          url: base_url+"resident/blotter",
+          url: base_url_api+"resident/blotter",
          }).done(function(data) {
             $('.blotter-wrapper').html(data);
             $('.blotterTable').dataTable();
@@ -19,7 +19,7 @@
         $('#blotter_id').val(id);
          
          $.ajax({
-          url: base_url+"resident/blotter/view/"+id,
+          url: base_url_api+"resident/blotter/view/"+id,
          }).done(function(data) {
             $('.blotter-noticewrapper').html(data);
         });
@@ -27,7 +27,7 @@
         $('#blotterNotice').submit(function(e){
             $.ajax({
                      type: "POST",
-                     url: base_url+'admin/blotter/sendnotice',
+                     url: base_url_api+'admin/blotter/sendnotice',
                      data: $("#blotterNotice").serialize(), // serializes the form's elements.
                      success: function(data)
                      {
@@ -52,7 +52,11 @@
                           getAllBlotter();
                      }
                });
+
               e.preventDefault();
+        $('#viewBlotterModal').modal('close');
+              
+
        }) 
   }
 
@@ -61,7 +65,7 @@
         var r = confirm("Are you sure you want to delete this!");
         if (r == true) {
               $.ajax({
-              url: base_url+"admin/blotter/notice/delete/"+id,
+              url: base_url_api+"admin/blotter/notice/delete/"+id,
              }).done(function(data) {
                 if (data == 1) {
                   $.toaster('Blotter notice delete success!','Success', 'success');
@@ -79,7 +83,7 @@
           $('#editNoticeModal').modal('toggle');
 
           $.ajax({
-            url: base_url+"admin/blotter/notice/edit/"+id,
+            url: base_url_api+"admin/blotter/notice/edit/"+id,
            }).done(function(data) {
               $('#edit_notice_id').val(data.id);
               $('#edit_blotter_id').val(data.blotter_id);
@@ -89,7 +93,7 @@
                     
                           $.ajax({
                                  type: "POST",
-                                 url: base_url+'admin/blotter/notice/save',
+                                 url: base_url_api+'admin/blotter/notice/save',
                                  data: $("#editNotice").serialize(), // serializes the form's elements.
                                  success: function(data2)
                                  {
@@ -127,7 +131,7 @@
 
       
       $.ajax({
-        url: base_url+"admin/blotter/notice/"+id,
+        url: base_url_api+"admin/blotter/notice/"+id,
        }).done(function(data) {
           $('.viewnotice-blotterwrapper').html(data);
       });
